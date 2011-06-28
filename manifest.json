@@ -1,0 +1,7 @@
+{
+  "name": "World of Warcraft Character",
+  "description" : "To use, type 'character' followed by the character name, an @ symbol and the character realm.",
+  "version": "1.0",
+  "background_page": "background.html",
+  "omnibox": { "keyword" : "character" }
+}

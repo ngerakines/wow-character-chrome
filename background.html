@@ -1,0 +1,46 @@
+<script>
+realms = new Array();
+realms = ["Medivh", "Lightbringer"];
+
+regions = new Array();
+regions["us"] = ["en", "es"];
+regions["eu"] = ["en", "fr", "es"];
+
+chrome.omnibox.onInputChanged.addListener(
+	function(text, suggest) {
+		name = text
+		realm = ""
+		region = "us"
+		suggestions = []
+
+		if (text.indexOf("@") != -1) {
+			parts = text.split("@");
+			name = parts[0];
+			realm = parts[1]
+			if (realm.indexOf("-") != -1) {
+				realmParts = realm.split("-");
+				realm = realmParts[0];
+				region = realmParts[1].toLowerCase();
+			}
+		}
+		if (name && realm) {
+			for (locale in regions[region]) {
+				url = characterUrl(name, realm, region, regions[region][locale])
+				suggestions.push({content: url, description: "<dim>" + name + " of " + realm + "</dim> <url>" + url + "</url>"})
+			}
+		}
+		suggest(suggestions);
+	}
+);
+
+chrome.omnibox.onInputEntered.addListener(
+	function(text) {
+		chrome.tabs.create({url: text});
+	}
+);
+
+function characterUrl(name, realm, region, locale) {
+	return "http://" + region + ".battle.net/wow/" + locale + "/character/" + realm + "/" + name + "/simple";
+}
+
+</script>
